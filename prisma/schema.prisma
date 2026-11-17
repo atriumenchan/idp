@@ -1,0 +1,101 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum OrderStatus {
+  draft
+  pending_payment
+  paid
+  ready
+  shipped
+  refunded
+  failed
+}
+
+enum DeliveryType {
+  digital
+  print_digital
+}
+
+enum UploadType {
+  licence_front
+  licence_back
+  portrait
+}
+
+model Order {
+  id                 String       @id @default(cuid())
+  accessToken        String       @unique
+  email              String
+  status             OrderStatus  @default(draft)
+  plan               String       @default("unset")
+  validityYears      Int          @default(1)
+  deliveryType       DeliveryType @default(digital)
+  amountCents        Int          @default(0)
+  currency           String       @default("usd")
+  planSelected       Boolean      @default(false)
+  noticeAccepted     Boolean      @default(false)
+  stripeSessionId    String?      @unique
+  destinationCountry String?
+  licenceCountry     String?
+  shipName           String?
+  shipLine1          String?
+  shipLine2          String?
+  shipCity           String?
+  shipRegion         String?
+  shipPostal         String?
+  shipCountry        String?
+  emailedAt          DateTime?
+  downloadedAt       DateTime?
+  createdAt          DateTime     @default(now())
+  applicant          Applicant?
+  uploads            Upload[]
+  documents          Document[]
+
+  @@index([email])
+}
+
+model Applicant {
+  id             String   @id @default(cuid())
+  orderId        String   @unique
+  order          Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  fullName       String
+  dob            DateTime
+  licenceCountry String
+  licenceNumber  String
+  licenceClass   String
+  issueDate      DateTime
+  expiryDate     DateTime
+}
+
+model Upload {
+  id         String     @id @default(cuid())
+  orderId    String
+  order      Order      @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  type       UploadType
+  storageKey String
+  createdAt  DateTime   @default(now())
+
+  @@unique([orderId, type])
+}
+
+model Document {
+  id        String   @id @default(cuid())
+  orderId   String
+  order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  pdfKey    String
+  version   Int
+  createdAt DateTime @default(now())
+
+  @@unique([orderId, version])
+}
+
+model WebhookEvent {
+  id        String   @id
+  createdAt DateTime @default(now())
+}

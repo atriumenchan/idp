@@ -1,0 +1,43 @@
+---
+alwaysApply: true
+---
+# Project: Halden Licence Translation
+
+Temporary product name: Halden Licence Translation. Replace it later in lib/copy.ts.
+
+## What the product is
+A private service that produces a multilingual translation of a customer's valid
+domestic driving licence (digital PDF + optional printed card). It is NOT an
+International Driving Permit, is NOT government-issued, and does NOT grant
+driving rights.
+
+## Stack
+- Next.js (App Router) + TypeScript + Tailwind
+- Prisma + PostgreSQL
+- Stripe Checkout for payments
+- Resend for email
+- Cloudflare R2 (S3 API) for uploaded files and generated PDFs
+- @react-pdf/renderer for PDF generation
+- Zod for validation
+
+## HARD COPY RULES (never violate, in any file, including metadata)
+- Never use the words "permit", "IDP", "IDD" or "International Driving
+  Permit" to describe our product. Only mention them when explaining what
+  the official document is and where to get it.
+- Never claim "valid in X countries", "accepted worldwide", "drive legally",
+  "avoid fines", "trusted by police", or that any rental company accepts it.
+- Never show third-party company logos.
+- Never invent reviews, customer counts or ratings.
+- Every page with a buy button must show this notice directly above it:
+  "This is a translation of your existing driving licence. It is not an
+  International Driving Permit, is not issued by any government, and does not
+  give you the right to drive. Check your destination's requirements."
+- Describe the product as: "multilingual translation of your valid licence
+  to help others read your details abroad."
+
+## Code rules
+- Server-side validation with Zod on every API route
+- Never trust client prices; compute amounts server-side
+- Store files privately; serve via signed URLs
+- Env vars in .env.example, never hardcode secrets
+- Small components, no giant files; add loading and error states

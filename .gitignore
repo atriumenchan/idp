@@ -1,0 +1,14 @@
+node_modules
+.next
+out
+dist
+.prisma
+.env
+.env*.local
+.data
+assets/fonts/*.ttf
+assets/fonts/*.otf
+npm-debug.log*
+.DS_Store
+*.tsbuildinfo
+next-env.d.ts
