@@ -3,7 +3,13 @@ import { prisma } from "@/lib/db";
 import { sendEmail } from "@/lib/email";
 import { PRODUCT_DESCRIPTION, PRODUCT_NAME } from "@/lib/copy";
 import { renderTranslationPdf } from "@/lib/pdf/render";
-import { newObjectKey, putPrivateObject, signedDownloadUrl } from "@/lib/storage";
+import { newObjectKey, putPrivateObject, readPrivateObject, signedDownloadUrl } from "@/lib/storage";
+
+function portraitFormat(bytes: Buffer): "jpg" | "png" | undefined {
+  if (bytes.length > 3 && bytes[0] === 0xff && bytes[1] === 0xd8) return "jpg";
+  if (bytes.length > 8 && bytes[0] === 0x89 && bytes[1] === 0x50 && bytes[2] === 0x4e && bytes[3] === 0x47) return "png";
+  return undefined;
+}
 
 function day(value: Date) {
   return value.toISOString().slice(0, 10);
@@ -12,10 +18,23 @@ function day(value: Date) {
 export async function ensureDocument(orderId: string, force = false) {
   const order = await prisma.order.findUnique({
     where: { id: orderId },
-    include: { applicant: true, documents: { orderBy: { version: "desc" }, take: 1 } },
+    include: { applicant: true, uploads: true, documents: { orderBy: { version: "desc" }, take: 1 } },
   });
   if (!order?.applicant) throw new Error("Applicant details are missing");
   if (!force && order.documents[0]) return order.documents[0];
+
+  const portraitUpload = order.uploads.find((item) => item.type === "portrait");
+  let portrait: Buffer | undefined;
+  let portraitKind: "jpg" | "png" | undefined;
+  if (portraitUpload) {
+    try {
+      const bytes = await readPrivateObject(portraitUpload.storageKey);
+      portraitKind = portraitFormat(bytes);
+      if (portraitKind) portrait = bytes;
+    } catch {
+      portrait = undefined;
+    }
+  }
 
   const version = (order.documents[0]?.version ?? 0) + 1;
   const pdf = await renderTranslationPdf({
@@ -28,6 +47,8 @@ export async function ensureDocument(orderId: string, force = false) {
     expiryDate: day(order.applicant.expiryDate),
     validityYears: order.validityYears,
     preparedOn: day(new Date()),
+    portrait,
+    portraitFormat: portraitKind,
   });
   const pdfKey = newObjectKey(order.id, `translation-v${version}.pdf`);
   await putPrivateObject(pdfKey, pdf, "application/pdf");

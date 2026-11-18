@@ -6,7 +6,6 @@ import { Suspense, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import type { z } from "zod";
 import { useCurrency } from "@/components/marketing/CurrencyProvider";
-import { LegalNotice } from "@/components/marketing/LegalNotice";
 import { COUNTRIES } from "@/lib/countries";
 import { formatMoney } from "@/lib/currencies";
 import { deliveryLabel } from "@/lib/pricing";
@@ -440,7 +439,6 @@ function ApplyWizardInner() {
               Ship to {order.shipName}, {order.shipLine1}, {order.shipCity}, {order.shipCountry}
             </p>
           ) : null}
-          <LegalNotice />
           <button type="button" disabled={busy} onClick={() => void confirm()} className="btn">
             {busy ? "Opening payment…" : "Confirm and pay"}
           </button>

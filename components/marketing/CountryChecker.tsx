@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
-import { LegalNotice } from "@/components/marketing/LegalNotice";
 import { COUNTRIES, findCountry, flagEmoji } from "@/lib/countries";
 
 export function CountryChecker({
@@ -126,7 +125,6 @@ export function CountryChecker({
               The licence country and the destination are the same. A translation is usually for a trip somewhere else.
             </p>
           ) : null}
-          <LegalNotice className="mt-3" />
           <Link
             href={`/apply?licenceCountry=${encodeURIComponent(licence)}&destination=${encodeURIComponent(destination)}`}
             className="btn mt-3"

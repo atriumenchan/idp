@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { useState } from "react";
 import { useCurrency } from "@/components/marketing/CurrencyProvider";
-import { LegalNotice } from "@/components/marketing/LegalNotice";
 import { convertFromUsdCents, formatMoney } from "@/lib/currencies";
 import { deliveryLabel, USD_CENTS, VALIDITY_YEARS, type DeliveryType, type ValidityYears } from "@/lib/pricing";
 
@@ -74,8 +73,7 @@ export function PriceTable() {
                 ))}
               </ul>
               <div className="mt-6">
-                <LegalNotice className={featured ? "bg-white/10 text-ivory border-white/15" : ""} />
-                <Link href={href} className={`btn mt-3 w-full ${featured ? "" : "btn-ink"}`}>
+                <Link href={href} className={`btn w-full ${featured ? "" : "btn-ink"}`}>
                   Continue with this package
                 </Link>
               </div>

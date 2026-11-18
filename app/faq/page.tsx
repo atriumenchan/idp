@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { FaqList } from "@/components/marketing/FaqList";
-import { LegalNotice } from "@/components/marketing/LegalNotice";
 
 export const metadata: Metadata = { title: "FAQ" };
 
@@ -16,8 +15,7 @@ export default function FaqPage() {
       <div className="mt-8">
         <FaqList />
       </div>
-      <LegalNotice className="mt-8" />
-      <Link href="/apply" className="btn mt-4">
+      <Link href="/apply" className="btn mt-8">
         Start application
       </Link>
     </article>

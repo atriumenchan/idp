@@ -10,7 +10,6 @@ export const BUY_NOTICE =
 export const HERO = {
   kicker: "Private licence translation",
   headline: "International driving documentation in minutes.",
-  support: "A multilingual translation of the licence you already hold.",
   time: "About 2 minutes.",
 };
 

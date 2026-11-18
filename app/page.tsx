@@ -3,7 +3,6 @@ import Link from "next/link";
 import { HeroStart } from "@/components/marketing/HeroStart";
 import { FaqList } from "@/components/marketing/FaqList";
 import { FeatureIcon } from "@/components/marketing/FeatureIcon";
-import { LegalNotice } from "@/components/marketing/LegalNotice";
 import { PriceTable } from "@/components/marketing/PriceTable";
 import { Testimonials } from "@/components/marketing/Testimonials";
 import { FEATURES, HERO, LANGUAGES, PRODUCT_DESCRIPTION, STEPS, TRUST } from "@/lib/copy";
@@ -19,7 +18,6 @@ export default function HomePage() {
       <section className="bg-navy text-ivory">
         <div className="mx-auto max-w-4xl px-4 py-16 text-center sm:py-24">
           <h1 className="font-serif text-4xl leading-tight text-ivory sm:text-6xl">{HERO.headline}</h1>
-          <p className="mx-auto mt-4 max-w-xl text-lg text-ivory/80">{HERO.support}</p>
           <HeroStart />
           <ul className="mt-8 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm text-ivory/80">
             <li>About 2 minutes</li>
@@ -172,7 +170,6 @@ export default function HomePage() {
           <p className="mt-4 max-w-xl text-ivory/85">
             Carry the original valid licence with the translation, and confirm what your destination asks for before you travel.
           </p>
-          <LegalNotice className="mt-6 bg-black/30 text-ivory border-white/20" />
           <Link href="/apply" className="btn mt-5">
             Start application
           </Link>

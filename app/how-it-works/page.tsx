@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { LegalNotice } from "@/components/marketing/LegalNotice";
 import { STEPS } from "@/lib/copy";
 
 const images = [
@@ -39,8 +38,7 @@ export default function HowItWorksPage() {
         </Link>{" "}
         and confirm the issuer yourself.
       </p>
-      <LegalNotice className="mt-6" />
-      <Link href="/apply" className="btn mt-4">
+      <Link href="/apply" className="btn mt-6">
         Start application
       </Link>
     </article>

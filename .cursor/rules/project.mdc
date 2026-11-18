@@ -28,7 +28,7 @@ driving rights.
   "avoid fines", "trusted by police", or that any rental company accepts it.
 - Never show third-party company logos.
 - Never invent reviews, customer counts or ratings.
-- Every page with a buy button must show this notice directly above it:
+- Show this notice only in the site footer, not above buy buttons:
   "This is a translation of your existing driving licence. It is not an
   International Driving Permit, is not issued by any government, and does not
   give you the right to drive. Check your destination's requirements."
