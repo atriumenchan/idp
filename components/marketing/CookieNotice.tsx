@@ -12,8 +12,8 @@ export function CookieNotice() {
   if (!open) return null;
 
   return (
-    <div className="fixed inset-x-0 bottom-0 z-30 border-t border-line bg-card px-4 py-3 shadow-lg">
-      <div className="mx-auto flex max-w-5xl flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+    <div className="fixed inset-x-3 bottom-3 z-40 rounded-3xl border border-line bg-card px-4 py-3 shadow-lift sm:inset-x-auto sm:right-4 sm:max-w-md">
+      <div className="flex flex-col gap-3">
         <p className="text-sm leading-relaxed">
           This site stores a currency choice in this browser and, if you sign in as an operator, an essential session cookie. Read the{" "}
           <a className="underline" href="/privacy">
@@ -23,7 +23,7 @@ export function CookieNotice() {
         </p>
         <button
           type="button"
-          className="rounded-md bg-pine px-3 py-2 text-sm text-pine2"
+          className="btn"
           onClick={() => {
             window.localStorage.setItem("halden-cookie", "1");
             setOpen(false);

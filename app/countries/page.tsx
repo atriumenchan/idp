@@ -1,29 +1,48 @@
 import type { Metadata } from "next";
-import Image from "next/image";
+import Link from "next/link";
 import { CountryChecker } from "@/components/marketing/CountryChecker";
+import { COUNTRIES, flagEmoji } from "@/lib/countries";
 
 export const metadata: Metadata = {
-  title: "Countries",
-  description: "Check whether a destination commonly asks for the official document, and where that document is issued.",
+  title: "Destinations",
+  description: "Check a destination against the unverified starter list, and see where an official document would come from.",
 };
 
-export default function CountriesPage() {
+type Props = { searchParams: Promise<{ destination?: string; licenceCountry?: string }> };
+
+export default async function CountriesPage({ searchParams }: Props) {
+  const query = await searchParams;
   return (
-    <article className="mx-auto max-w-3xl px-4 py-12">
-      <Image
-        src="/images/hero-travel.jpg"
-        alt="Hands holding a blank sheet beside a suitcase"
-        width={1280}
-        height={720}
-        className="mb-8 h-52 w-full rounded-2xl border border-line object-cover"
-      />
-      <h1 className="font-serif text-4xl">Country checker</h1>
-      <p className="mt-3 text-sm leading-relaxed">
-        Pick the country that issued your licence and the place you are visiting. Every factual field in this starter list is marked TODO_VERIFY so it can be replaced with a checked source. The result names the official document and links to the listed issuer. It does not say this translation is valid there.
-      </p>
-      <div className="mt-8 rounded-2xl border border-line bg-card p-5">
-        <CountryChecker idPrefix="page" />
+    <article className="mx-auto max-w-6xl px-4 py-14">
+      <div className="grid items-start gap-10 lg:grid-cols-[0.9fr_1.1fr]">
+        <div>
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-sand">Country checker</p>
+          <h1 className="mt-2 font-serif text-5xl leading-tight">Destinations</h1>
+          <p className="mt-4 text-lg leading-relaxed text-mute">
+            Pick the country that issued your licence and the place you are visiting. Nothing in this list says the Halden translation is accepted there. Official rules still need a checked source.
+          </p>
+        </div>
+        <div className="rounded-[28px] border border-line bg-card p-5 shadow-lift">
+          <CountryChecker idPrefix="page" initialDestination={query.destination} initialLicence={query.licenceCountry} />
+        </div>
       </div>
+      <h2 className="mt-14 font-serif text-3xl">Directory</h2>
+      <ul className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        {COUNTRIES.map((item) => (
+          <li key={item.code}>
+            <Link
+              href={`/countries?destination=${encodeURIComponent(item.country)}`}
+              className="block rounded-3xl border border-line bg-card px-4 py-4 transition hover:border-pine"
+            >
+              <span className="text-2xl" aria-hidden="true">
+                {flagEmoji(item.code)}
+              </span>
+              <span className="mt-2 block font-serif text-xl">{item.country}</span>
+              <span className="mt-1 block text-sm text-mute">{item.verified ? "Verified" : "Not verified"}</span>
+            </Link>
+          </li>
+        ))}
+      </ul>
     </article>
   );
 }

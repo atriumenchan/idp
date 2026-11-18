@@ -13,12 +13,12 @@ function parseUtcDay(value: string) {
 export const detailsSchema = z
   .object({
     email: z.string().trim().email("Enter a valid email").max(160),
-    fullName: z.string().trim().min(2).max(120),
+    fullName: z.string().trim().min(2, "Enter the full name").max(120),
     dob: day,
     licenceCountry: z.string().trim(),
     destinationCountry: z.string().trim(),
-    licenceNumber: z.string().trim().min(3).max(40),
-    licenceClass: z.string().trim().min(1).max(20),
+    licenceNumber: z.string().trim().min(3, "Enter the licence number").max(40),
+    licenceClass: z.string().trim().min(1, "Enter the licence class").max(20),
     issueDate: day,
     expiryDate: day,
   })

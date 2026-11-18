@@ -50,7 +50,7 @@ export default async function OrderPage({ params, searchParams }: Params) {
       </p>
       <StatusRefresh active={waiting || order.status === "paid"} />
       {latest ? (
-        <a className="mt-6 inline-flex rounded-md bg-pine px-4 py-2 text-sm text-pine2" href={`/api/orders/${order.id}/download?token=${encodeURIComponent(token)}`}>
+        <a className="btn mt-6" href={`/api/orders/${order.id}/download?token=${encodeURIComponent(token)}`}>
           Download translation
         </a>
       ) : (

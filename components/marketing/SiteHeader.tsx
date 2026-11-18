@@ -1,50 +1,75 @@
+"use client";
+
 import Link from "next/link";
+import { useState } from "react";
 import { CurrencyMenu } from "@/components/marketing/CurrencyMenu";
+import { LogoMark } from "@/components/marketing/Logo";
 import { PRODUCT_NAME } from "@/lib/copy";
 
 const LINKS = [
   ["How it works", "/how-it-works"],
+  ["Destinations", "/countries"],
   ["Pricing", "/pricing"],
   ["FAQ", "/faq"],
-  ["Countries", "/countries"],
   ["Contact", "/contact"],
   ["Check an order", "/order/lookup"],
 ];
 
 export function SiteHeader() {
+  const [open, setOpen] = useState(false);
+
   return (
-    <header className="sticky top-0 z-20 border-b border-line bg-card/95 backdrop-blur">
-      <div className="mx-auto flex max-w-5xl items-center justify-between gap-3 px-4 py-3">
-        <Link href="/" className="flex items-center gap-2 font-serif text-xl text-pine">
-          <span className="grid h-8 w-8 place-items-center rounded-md bg-pine text-sm font-semibold text-pine2" aria-hidden="true">
-            H
+    <header className="sticky top-0 z-30 border-b border-line/80 bg-ivory/90 backdrop-blur">
+      <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3">
+        <Link href="/" className="flex items-center gap-2.5" onClick={() => setOpen(false)}>
+          <LogoMark />
+          <span className="leading-tight">
+            <span className="block font-serif text-xl tracking-tight">{PRODUCT_NAME}</span>
+            <span className="hidden text-[11px] uppercase tracking-[0.16em] text-mute sm:block">Licence translation</span>
           </span>
-          <span className="hidden sm:inline">{PRODUCT_NAME}</span>
         </Link>
-        <nav className="hidden items-center gap-4 text-sm md:flex" aria-label="Primary">
+        <nav className="hidden items-center gap-5 text-sm text-ink/80 lg:flex" aria-label="Primary">
           {LINKS.map(([label, href]) => (
-            <Link key={href} href={href} className="hover:text-pine">
+            <Link key={href} href={href} className="transition hover:text-pine">
               {label}
             </Link>
           ))}
         </nav>
         <div className="flex items-center gap-2">
           <CurrencyMenu />
-          <Link href="/apply" className="rounded-md bg-pine px-3 py-2 text-sm text-pine2">
+          <Link href="/apply" className="btn hidden sm:inline-flex">
             Start application
           </Link>
+          <button
+            type="button"
+            className="grid h-10 w-10 place-items-center rounded-full border border-line lg:hidden"
+            aria-expanded={open}
+            aria-controls="mobile-nav"
+            onClick={() => setOpen((value) => !value)}
+          >
+            <span className="sr-only">Menu</span>
+            <span aria-hidden="true" className="flex flex-col gap-1.5">
+              <span className="block h-px w-4 bg-ink" />
+              <span className="block h-px w-4 bg-ink" />
+              <span className="block h-px w-4 bg-ink" />
+            </span>
+          </button>
         </div>
       </div>
-      <details className="border-t border-line px-4 py-2 md:hidden">
-        <summary className="cursor-pointer text-sm">Menu</summary>
-        <nav className="flex flex-col gap-2 py-2 text-sm" aria-label="Mobile">
-          {LINKS.map(([label, href]) => (
-            <Link key={href} href={href}>
-              {label}
+      {open ? (
+        <nav id="mobile-nav" className="border-t border-line bg-ivory px-4 py-4 lg:hidden" aria-label="Mobile">
+          <div className="mx-auto flex max-w-6xl flex-col gap-3 text-base">
+            {LINKS.map(([label, href]) => (
+              <Link key={href} href={href} onClick={() => setOpen(false)} className="py-1">
+                {label}
+              </Link>
+            ))}
+            <Link href="/apply" className="btn mt-2" onClick={() => setOpen(false)}>
+              Start application
             </Link>
-          ))}
+          </div>
         </nav>
-      </details>
+      ) : null}
     </header>
   );
 }

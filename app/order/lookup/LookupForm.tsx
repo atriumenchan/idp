@@ -39,14 +39,14 @@ export function LookupForm() {
         <label htmlFor="email" className="text-sm font-medium">Email</label>
         <input id="email" name="email" type="email" required className="mt-1 w-full rounded-md border border-line px-3 py-2" />
       </div>
-      {error ? <p role="alert" className="text-sm text-red-800">{error}</p> : null}
-      {status ? <p className="text-sm">Status: {status.replaceAll("_", " ")}</p> : null}
+      {error ? <p role="alert" className="notice-error rounded-xl px-3 py-2 text-sm">{error}</p> : null}
+      {status ? <p className="notice-info rounded-xl px-3 py-2 text-sm">Status: {status.replaceAll("_", " ")}</p> : null}
       {downloadUrl ? (
         <a className="inline-flex text-sm underline" href={downloadUrl}>
           Download translation
         </a>
       ) : null}
-      <button type="submit" disabled={busy} className="rounded-md bg-pine px-4 py-2 text-sm text-pine2 disabled:opacity-60">
+      <button type="submit" disabled={busy} className="btn">
         {busy ? "Checking…" : "Check order"}
       </button>
     </form>

@@ -50,12 +50,12 @@ export function ContactForm() {
         <textarea id="message" name="message" required minLength={10} rows={5} className="mt-1 w-full rounded-md border border-line px-3 py-2" />
       </div>
       {message ? (
-        <p role="alert" className="text-sm text-red-800">
+        <p role="alert" className="notice-error rounded-xl px-3 py-2 text-sm">
           {message}
         </p>
       ) : null}
-      {status === "sent" ? <p className="text-sm">Message sent.</p> : null}
-      <button type="submit" disabled={status === "sending"} className="rounded-md bg-pine px-4 py-2 text-sm text-pine2 disabled:opacity-60">
+      {status === "sent" ? <p className="notice-ok rounded-xl px-3 py-2 text-sm">Message sent. We reply by email.</p> : null}
+      <button type="submit" disabled={status === "sending"} className="btn">
         {status === "sending" ? "Sending…" : "Send"}
       </button>
     </form>

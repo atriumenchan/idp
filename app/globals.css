@@ -3,17 +3,164 @@
 @tailwind utilities;
 
 :focus-visible {
-  outline: 2px solid #00fff7;
+  outline: 2px solid #1b6b72;
   outline-offset: 2px;
+}
+
+body {
+  min-height: 100vh;
+  background: #f3eee4;
+  color: #172033;
 }
 
 input,
 select,
 textarea {
-  background-color: #131a2a;
-  color: #f9f9f9;
+  background-color: #fffdf9;
+  color: #172033;
+  border: 1px solid #e4d8c6;
+  border-radius: 0.8rem;
 }
 
-body {
-  min-height: 100vh;
+input:focus,
+select:focus,
+textarea:focus {
+  outline: 2px solid #1b6b72;
+  outline-offset: 1px;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  border-radius: 999px;
+  padding: 0.85rem 1.3rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  line-height: 1;
+  background: #1b6b72;
+  color: #fffdf8;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.btn:hover {
+  background: #15575d;
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-ink {
+  background: #12263c;
+  color: #fffdf8;
+}
+
+.btn-ink:hover {
+  background: #1c3854;
+}
+
+.btn-line {
+  background: transparent;
+  color: #172033;
+  border: 1px solid #cbbfaa;
+}
+
+.btn-line:hover {
+  background: #fffdf8;
+}
+
+.btn-gold {
+  background: #e2b34d;
+  color: #1a1408;
+  min-height: 3.5rem;
+  padding-inline: 1.75rem;
+  font-size: 1rem;
+}
+
+.btn-gold:hover {
+  background: #efc56a;
+}
+
+.btn-ghost {
+  background: transparent;
+  color: #f7f1e6;
+  border: 1px solid rgba(247, 241, 230, 0.45);
+}
+
+.btn-ghost:hover {
+  background: rgba(247, 241, 230, 0.1);
+}
+
+.legal-note {
+  background: #f8f1dc;
+  color: #3d3422;
+  border: 1px solid #e3d2a4;
+}
+
+.notice-error {
+  background: #f8e8e4;
+  color: #6e2424;
+  border: 1px solid #e4b2a8;
+}
+
+.notice-ok {
+  background: #e5f3ea;
+  color: #145233;
+  border: 1px solid #b7dcc6;
+}
+
+.notice-info {
+  background: #e7eef5;
+  color: #1c3d5c;
+  border: 1px solid #c5d5e4;
+}
+
+.notice-warn {
+  background: #f8f1dc;
+  color: #6a4a10;
+  border: 1px solid #e3d2a4;
+}
+
+.rise {
+  animation: rise 0.7s ease both;
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.faq-panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.28s ease;
+}
+
+.faq-panel.open {
+  grid-template-rows: 1fr;
+}
+
+.faq-panel > div {
+  overflow: hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rise,
+  .faq-panel {
+    animation: none;
+    transition: none;
+  }
+
+  .btn:hover {
+    transform: none;
+  }
 }

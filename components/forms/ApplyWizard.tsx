@@ -6,13 +6,21 @@ import { Suspense, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import type { z } from "zod";
 import { useCurrency } from "@/components/marketing/CurrencyProvider";
+import { LegalNotice } from "@/components/marketing/LegalNotice";
 import { COUNTRIES } from "@/lib/countries";
 import { formatMoney } from "@/lib/currencies";
 import { deliveryLabel } from "@/lib/pricing";
 import { detailsSchema, planSchema } from "@/lib/validators";
 
 const STORAGE_KEY = "halden-order";
-const inputClass = "mt-1 w-full rounded-md border border-line bg-card px-3 py-2 text-sm";
+const inputClass = "mt-1 w-full px-3 py-3 text-sm";
+const STEP_LABELS: Record<Step, string> = {
+  eligibility: "Eligibility",
+  details: "Details",
+  uploads: "Documents",
+  plan: "Package",
+  review: "Review",
+};
 
 type DetailsInput = z.input<typeof detailsSchema>;
 type PlanInput = z.input<typeof planSchema>;
@@ -241,41 +249,45 @@ function ApplyWizardInner() {
   const delivery = planForm.watch("deliveryType");
   const hasUploads = ["licence_front", "licence_back", "portrait"].every((type) => uploads[type]);
 
+  const stepIndex = STEPS.indexOf(step);
+
   return (
     <div>
-      <ol className="mb-6 flex flex-wrap gap-2 text-sm" aria-label="Steps">
+      <ol className="mb-6 grid grid-cols-5 gap-2" aria-label="Steps">
         {STEPS.map((item, index) => (
-          <li key={item} className={item === step ? "font-semibold text-pine" : "text-mute"}>
-            {index + 1}. {item}
+          <li key={item} className="min-w-0">
+            <span className={`block h-1 rounded-full ${index <= stepIndex ? "bg-pine" : "bg-line"}`} />
+            <span className={`mt-2 block truncate text-xs ${item === step ? "font-semibold text-ink" : "text-mute"}`}>
+              {index + 1}. {STEP_LABELS[item]}
+            </span>
           </li>
         ))}
       </ol>
       {error ? (
-        <p role="alert" className="mb-4 rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-900">
+        <p role="alert" className="notice-error mb-4 rounded-xl px-3 py-2 text-sm">
           {error}
         </p>
       ) : null}
 
       {step === "eligibility" ? (
-        <fieldset className="space-y-3">
-          <legend className="text-lg font-medium">Do you have a valid driving licence?</legend>
-          <label className="flex items-center gap-2 text-sm">
-            <input type="radio" name="eligible" checked={eligible === "yes"} onChange={() => setEligible("yes")} />
-            Yes
-          </label>
-          <label className="flex items-center gap-2 text-sm">
-            <input type="radio" name="eligible" checked={eligible === "no"} onChange={() => setEligible("no")} />
-            No
-          </label>
+        <fieldset>
+          <legend className="font-serif text-2xl">Do you have a valid driving licence?</legend>
+          <div className="mt-4 grid gap-3 sm:grid-cols-2">
+            <label className={`cursor-pointer rounded-2xl border px-4 py-4 ${eligible === "yes" ? "border-pine bg-ivory" : "border-line"}`}>
+              <input className="sr-only" type="radio" name="eligible" checked={eligible === "yes"} onChange={() => setEligible("yes")} />
+              <span className="block font-semibold">Yes</span>
+              <span className="mt-1 block text-sm text-mute">The licence has not expired.</span>
+            </label>
+            <label className={`cursor-pointer rounded-2xl border px-4 py-4 ${eligible === "no" ? "border-danger bg-[#f8e8e4]" : "border-line"}`}>
+              <input className="sr-only" type="radio" name="eligible" checked={eligible === "no"} onChange={() => setEligible("no")} />
+              <span className="block font-semibold">No</span>
+              <span className="mt-1 block text-sm text-mute">It is expired, or I do not have one.</span>
+            </label>
+          </div>
           {eligible === "no" ? (
-            <p className="text-sm">We can only translate a licence that is still valid. We cannot continue this application.</p>
+            <p className="notice-warn mt-4 rounded-xl px-3 py-2 text-sm">We can only translate a licence that is still valid. This application stops here.</p>
           ) : null}
-          <button
-            type="button"
-            disabled={eligible !== "yes"}
-            className="rounded-md bg-pine px-4 py-2 text-sm text-pine2 disabled:opacity-50"
-            onClick={() => setStep("details")}
-          >
+          <button type="button" disabled={eligible !== "yes"} className="btn mt-5" onClick={() => setStep("details")}>
             Continue
           </button>
         </fieldset>
@@ -321,7 +333,7 @@ function ApplyWizardInner() {
             <FieldError message={detailsForm.formState.errors.destinationCountry?.message} />
           </div>
           <div className="sm:col-span-2">
-            <button type="submit" disabled={busy} className="rounded-md bg-pine px-4 py-2 text-sm text-pine2 disabled:opacity-60">
+            <button type="submit" disabled={busy} className="btn">
               {busy ? "Saving…" : "Save and continue"}
             </button>
           </div>
@@ -332,34 +344,31 @@ function ApplyWizardInner() {
         <div className="space-y-4">
           {(
             [
-              ["licence_front", "Licence front"],
-              ["licence_back", "Licence back"],
+              ["licence_front", "Front of the licence"],
+              ["licence_back", "Back of the licence"],
               ["portrait", "Portrait photo"],
             ] as const
           ).map(([type, label]) => (
-            <div key={type}>
-              <label htmlFor={type} className="text-sm font-medium">
+            <div key={type} className="rounded-2xl border border-line px-4 py-4">
+              <label htmlFor={type} className="text-sm font-semibold">
                 {label}
               </label>
               <input
                 id={type}
                 type="file"
                 accept="image/jpeg,image/png,application/pdf"
-                className="mt-1 block w-full text-sm"
+                className="mt-2 block w-full text-sm"
                 onChange={(event) => {
                   const file = event.target.files?.[0];
                   if (file) void uploadFile(type, file);
                 }}
               />
-              <p className="text-sm text-mute">{uploads[type] ? "Saved" : "JPG, PNG, or PDF, up to 8MB"}</p>
+              <p className={`mt-2 text-sm ${uploads[type] ? "text-ok" : "text-mute"}`}>
+                {uploads[type] ? "Saved" : "JPG, PNG, or PDF, up to 8MB"}
+              </p>
             </div>
           ))}
-          <button
-            type="button"
-            disabled={!hasUploads || busy}
-            className="rounded-md bg-pine px-4 py-2 text-sm text-pine2 disabled:opacity-50"
-            onClick={() => setStep("plan")}
-          >
+          <button type="button" disabled={!hasUploads || busy} className="btn" onClick={() => setStep("plan")}>
             Continue
           </button>
         </div>
@@ -407,7 +416,7 @@ function ApplyWizardInner() {
               ))}
             </div>
           ) : null}
-          <button type="submit" disabled={busy} className="rounded-md bg-pine px-4 py-2 text-sm text-pine2 disabled:opacity-60">
+          <button type="submit" disabled={busy} className="btn">
             {busy ? "Saving…" : "Review order"}
           </button>
         </form>
@@ -431,12 +440,8 @@ function ApplyWizardInner() {
               Ship to {order.shipName}, {order.shipLine1}, {order.shipCity}, {order.shipCountry}
             </p>
           ) : null}
-          <button
-            type="button"
-            disabled={busy}
-            onClick={() => void confirm()}
-            className="rounded-md bg-pine px-4 py-2 text-pine2 disabled:opacity-50"
-          >
+          <LegalNotice />
+          <button type="button" disabled={busy} onClick={() => void confirm()} className="btn">
             {busy ? "Opening payment…" : "Confirm and pay"}
           </button>
         </div>
